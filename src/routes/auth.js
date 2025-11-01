@@ -12,10 +12,10 @@ router.post(
     authCtrl.registerUser,
 );
 
-// router.post("/login", 
-//     validateLogin, 
-//     getValidationErr,
-//     authCtrl.login,
-// )
+router.post("/login", 
+    validateLogin, 
+    getValidationErr,
+    authCtrl.login,
+)
 
 export default router;
