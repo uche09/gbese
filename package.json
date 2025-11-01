@@ -4,6 +4,7 @@
   "description": "A credit tracker",
   "main": "index.js",
   "scripts": {
+    "server": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
