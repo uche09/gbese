@@ -31,3 +31,20 @@ const validateRegistration = [
         return true;
     }),
 ];
+
+
+const validateLogin = [
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("Invalid credentials")
+        .bail()
+        .isEmail()
+        .withMessage("Invalid credentials"),
+    
+    body("password")
+        .notEmpty()
+        .withMessage("Invalid credentials"),
+];
+
+export {validateRegistration, validateLogin};
