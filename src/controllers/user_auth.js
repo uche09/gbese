@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import config from "../config/index.js";
 
 
+const COOKIE_NAME = config.SESSION_COOKIE_NAME;
 
 export async function registerUser(req, res) {
     
