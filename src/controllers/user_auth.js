@@ -87,10 +87,10 @@ export async function refresh(req, res) {
   if (!dbToken) return res.status(403).json({ success: false, error: "Refresh token revoked or not found, please login" });
 
   // Issue new access token
-  const accessToken = signAccessToken({ userId: payload.id, email: payload.email });
+  const accessToken = signAccessToken({ userId: payload.userId, email: payload.email });
 
   // Rotate refresh tokens: issue a new refresh token and revoke the old one
-  const newRefreshToken = signRefreshToken({ userId: payload.id, username: payload.username, email: payload.email });
+  const newRefreshToken = signRefreshToken({ userId: payload.userId, username: payload.username, email: payload.email });
   dbToken.isRevoked = true;
   await dbToken.save();
 
@@ -116,7 +116,7 @@ export async function logout(req, res) {
   } catch (err) {
     return res.status(401).json({success: false, error: "Not logged in"})
   }
-  
+
   if (token) {
     // revoke in DB
     await db.RefreshToken.update({ isRevoked: true }, { where: { token } });
