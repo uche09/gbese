@@ -24,8 +24,7 @@ export async function registerUser(req, res) {
             message: "User registered"
         });
     } catch (error) {
-        return res.status(400).json({ success: false, error: error.message || "Registration"})
-        throw new AppError(error || "Registration failed", 400)
+        return res.status(400).json({ success: false, error: error.message || "Registration Failed"});
     }
     
 }
@@ -64,7 +63,14 @@ export async function login(req, res) {
 }
 
 export async function refresh(req, res) {
-  const token = req.cookies[COOKIE_NAME] || req.body.refreshToken;
+  let token = null;
+
+  try{
+    token = req.cookies[COOKIE_NAME] || req.body.refreshToken;
+  } catch (error) {
+    return res.status(401).json({success: false, error: "No refresh token"});
+  }
+
   if (!token) return res.status(401).json({ success: false, error: "No refresh token" });
 
   let payload;
@@ -104,10 +110,18 @@ export async function refresh(req, res) {
 }
 
 export async function logout(req, res) {
-  const token = req.cookies[COOKIE_NAME] || req.body.refreshToken;
+  let token = null;
+  try{
+    token = req.cookies[COOKIE_NAME] || req.body.refreshToken;
+  } catch (err) {
+    return res.status(401).json({success: false, error: "Not logged in"})
+  }
+  
   if (token) {
     // revoke in DB
     await db.RefreshToken.update({ isRevoked: true }, { where: { token } });
+  } else {
+    return res.status(401).json({ success: false, error: "Not logged in" });
   }
 
   // clear cookie
