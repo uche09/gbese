@@ -3,10 +3,12 @@ import config from "./config/index.js";
 import sequelize, {connectDB} from "./config/db.js";
 import errorHandler from "./middlewares/app_error_handler.js";
 import authRoutes from "./routes/auth.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 // middlewares
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
