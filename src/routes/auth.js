@@ -16,6 +16,14 @@ router.post("/login",
     validateLogin, 
     getValidationErr,
     authCtrl.login,
-)
+);
+
+router.post("/refresh-token",
+    authCtrl.refresh
+);
+
+router.post("/logout",
+    authCtrl.logout
+);
 
 export default router;
