@@ -24,16 +24,27 @@ const Record = sequelise.define(
         customerName: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
 
         },
 
         customerPhoneNumber: DataTypes.STRING,
         email: DataTypes.STRING,
         
-        amount: {
+        amount: { // Sales total amount
             type: DataTypes.FLOAT,
             allowNull: false,
+        },
+
+        payment: { // Total payment so far
+            type: DataTypes.FLOAT,
+            defaultValue: 0.0,
+        },
+
+        balance: DataTypes.FLOAT, // Balance left
+
+        beenCleared: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
 
         transactionType: {
@@ -56,10 +67,40 @@ const Record = sequelise.define(
     {
         timestamps: true,
 
+        hooks: {
+            beforeCreate: async (record) => {
+                record.balance = record.amount - record.payment;
+
+                if (record.balance === 0 && record.amount === record.payment) {
+                    record.beenCleared = true;
+                }else {
+                    record.beenCleared = false;
+                }
+            },
+
+            beforeUpdate: async (record) => {
+                // Recalculate balance
+
+                if (record.changed("payment")) {
+                    record.balance = record.amount - record.payment;
+                }
+
+                if (record.changed("amount")) {
+                    record.balance = record.amount - record.payment;
+                }
+
+
+                if (record.balance === 0 && record.amount === record.payment) {
+                    record.beenCleared = true;
+                }else {
+                    record.beenCleared = false;
+                }
+            },
+        },
 
         indexes: [
             {
-                fields: ["userId", "customerName", ],
+                fields: ["userId" ],
             },
             
             {
