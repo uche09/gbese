@@ -1,4 +1,3 @@
-import AppError from "../utils/app_error.js"
 import {createUser} from "../services/user_service.js"
 import db from "../models/index.js"
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from "../utils/tokens.js"
@@ -41,7 +40,7 @@ export async function login(req, res) {
   const ok = await user.verifyPassword(password);
   if (!ok) return res.status(401).json({ success: false, error: "Invalid credentials" });
 
-  const accessToken = signAccessToken({ userId: user.id, email: user.email });
+  const accessToken = signAccessToken({ userId: user.id, email: user.email, isAdmin: user.isAdmin });
   const refreshToken = signRefreshToken({ userId: user.id, username: user.username, email: user.email });
 
   // Store refresh token in DB (so that we can easily revoke or delete/destroy)
@@ -87,7 +86,7 @@ export async function refresh(req, res) {
   if (!dbToken) return res.status(403).json({ success: false, error: "Refresh token revoked or not found, please login" });
 
   // Issue new access token
-  const accessToken = signAccessToken({ userId: payload.userId, email: payload.email });
+  const accessToken = signAccessToken({ userId: payload.userId, email: payload.email, isAdmin: payload.isAdmin });
 
   // Rotate refresh tokens: issue a new refresh token and revoke the old one
   const newRefreshToken = signRefreshToken({ userId: payload.userId, username: payload.username, email: payload.email });
