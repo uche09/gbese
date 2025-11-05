@@ -80,7 +80,6 @@ const User = sequelise.define(
 
         indexes: [
             {
-                unique: true,
                 fields: ["email"],
             },
             
