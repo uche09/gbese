@@ -1,3 +1,4 @@
+import sequelize from "../config/db.js";
 import Record from "../models/record.js";
 import User from "../models/user.js";
 import { Op } from "sequelize";
@@ -44,4 +45,42 @@ async function createRecord(record) {
     return newRecord;
 }
 
-export default { createRecord };
+async function fetchAdminStatistics(whereClause, transactionType) {
+
+    whereClause.transactionType = transactionType;
+    whereClause.beenCleared = false;
+
+    const stats = await Record.findAll({
+        attributes: [
+            [sequelize.fn('sum', sequelize.col('balance')), 'totalDebtOwed'],
+            [sequelize.fn('sum', sequelize.col('amount')), "creditSales"],
+            [sequelize.fn('sum', sequelize.col('payment')), "paymentReceived"],
+            [sequelize.fn('count', sequelize.col("transactionType")), "activeDebtors"],
+        ],
+
+        where: whereClause,
+        raw: true, // get object output instead of model instances
+    });
+
+    const overdueRecords = await Record.findOne({
+        attributes: [[sequelize.fn('sum', sequelize.col('balance')), "overduePayments"]],
+        where: {
+            transactionType: transactionType,
+            beenCleared: false,
+            dueDate: {
+                [Op.lt]: new Date()
+            },
+        },
+
+        raw: true,
+    });
+    
+    // if stats is null, add overdue statistics
+    if (stats && stats[0]) {
+        stats[0].overduePayments = overdueRecords?.overduePayments || 0;
+    }
+
+    return stats[0]; // findAll returns an array,
+}
+
+export default { createRecord, fetchAdminStatistics };
