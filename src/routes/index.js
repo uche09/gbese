@@ -1,5 +1,6 @@
 import authRoutes from "./auth.js";
-import recordRouts from "./record.js";
+import recordRoutes from "./record.js";
+import adminRoutes from "./admin.js";
 
 
-export default {authRoutes, recordRouts};
+export default { authRoutes, recordRouts: recordRoutes, adminRoutes };

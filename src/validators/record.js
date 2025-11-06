@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 
 const validateNewRec = [
     body("customerName")
@@ -73,4 +73,18 @@ const validateNewRec = [
     
 ];
 
-export {validateNewRec};
+
+const validateAdminStatistics = [
+    query("start")
+        .optional()
+        .trim()
+        .isDate()
+        .withMessage("Expected a date in query strig"),
+    
+    query("end")
+        .optional()
+        .trim()
+        .isDate()
+        .withMessage("Expected a date in query strig"),
+];
+export {validateNewRec, validateAdminStatistics};
