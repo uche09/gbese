@@ -83,4 +83,25 @@ async function fetchAdminStatistics(whereClause, transactionType) {
     return stats[0]; // findAll returns an array,
 }
 
-export default { createRecord, fetchAdminStatistics };
+
+async function fetchUserRecord(whereClause) {
+
+    const records = await Record.findAll({
+        attributes: {
+            exclude: ["userId"]
+        },
+        order: [["updatedAt", "DESC"]],
+
+        where: whereClause,
+        raw: true,
+    });
+
+    return records;
+}
+
+
+
+export default { 
+    createRecord, fetchAdminStatistics, 
+    fetchUserRecord, searchForRecord 
+};
