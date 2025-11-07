@@ -74,7 +74,14 @@ const validateNewRec = [
 ];
 
 
-const validateAdminStatistics = [
+const validateRecordRange = [
+    query("type")
+        .optional()
+        .trim()
+        .toLowerCase()
+        .isIn(["borrow", "lend"])
+        .withMessage("Invalid type"),
+
     query("start")
         .optional()
         .trim()
@@ -87,4 +94,4 @@ const validateAdminStatistics = [
         .isDate()
         .withMessage("Expected a date in query strig"),
 ];
-export {validateNewRec, validateAdminStatistics};
+export {validateNewRec, validateRecordRange };
