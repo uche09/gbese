@@ -99,7 +99,19 @@ async function fetchUserRecord(whereClause) {
     return records;
 }
 
+async function searchForRecord(whereClause, transactionType) {
+    whereClause.transactionType = transactionType;
 
+    const record = await Record.findAll({
+        attributes: {
+            exclude: ["userId"]
+        },
+
+        order: [["updatedAt", "DESC"]],
+        where: whereClause,
+        raw: true,
+    });
+}
 
 export default { 
     createRecord, fetchAdminStatistics, 
