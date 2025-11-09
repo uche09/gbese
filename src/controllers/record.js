@@ -85,7 +85,48 @@ export async function getUserRecords(req, res) {
             statistics: record,
         });
     } catch (error) {
-        return res.status(400).json({ success: false, error: error.message || "Registration Failed"});
+        return res.status(400).json({ success: false, error: error.message || "Failed to get Record"});
+    }
+    
+}
+
+export async function search(req, res) {
+    const { id, name } = req.query;
+
+    let whereClause = {};
+    // whereClause.transactionType = transactionType;
+    whereClause.userId = req.user.id;
+
+    if (!id && !name) {
+        return res.status(400).json({success: false, error: "Provide record id or name"});
+    }
+
+    if (id && name) {
+        return res.status(400).json({success: false, error: "Search either by id or name"});
+    }
+
+    if (id) {
+        whereClause.id = id;
+    } else if (name) {
+        whereClause[Op.or] = [
+            { customerName: { [Op.eq]: name } },
+            { customerName: { [Op.like]: `%${name}%` } }
+        ];
+    }
+
+    try {
+        const record = await recordService.searchForRecord(whereClause);
+
+        if (record.length === 0) {
+            return res.status(404).json({success: false, error: "Record not found"});
+        }
+
+        return res.status(200).json({
+            success: true,
+            statistics: record,
+        });
+    } catch (error) {
+        return res.status(400).json({ success: false, error: error.message || "Search Failed"});
     }
     
 }
