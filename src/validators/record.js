@@ -94,4 +94,19 @@ const validateRecordRange = [
         .isDate()
         .withMessage("Expected a date in query strig"),
 ];
-export {validateNewRec, validateRecordRange };
+
+const validateSearchQuery = [
+    query("id")
+        .optional()
+        .trim()
+        .isInt()
+        .withMessage("Expected a number"),
+
+    query("name")
+        .optional()
+        .trim()
+        .toLowerCase()
+        .isString()
+        .withMessage("Invalid name"),
+];
+export { validateNewRec, validateRecordRange, validateSearchQuery };

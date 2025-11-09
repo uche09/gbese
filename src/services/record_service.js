@@ -45,10 +45,7 @@ async function createRecord(record) {
     return newRecord;
 }
 
-async function fetchAdminStatistics(whereClause, transactionType) {
-
-    whereClause.transactionType = transactionType;
-    whereClause.beenCleared = false;
+async function fetchAdminStatistics(whereClause) {
 
     const stats = await Record.findAll({
         attributes: [
@@ -62,15 +59,13 @@ async function fetchAdminStatistics(whereClause, transactionType) {
         raw: true, // get object output instead of model instances
     });
 
+    whereClause.dueDate = {
+        [Op.lt]: new Date()
+    };
+
     const overdueRecords = await Record.findOne({
         attributes: [[sequelize.fn('sum', sequelize.col('balance')), "overduePayments"]],
-        where: {
-            transactionType: transactionType,
-            beenCleared: false,
-            dueDate: {
-                [Op.lt]: new Date()
-            },
-        },
+        where: whereClause,
 
         raw: true,
     });
@@ -99,8 +94,7 @@ async function fetchUserRecord(whereClause) {
     return records;
 }
 
-async function searchForRecord(whereClause, transactionType) {
-    whereClause.transactionType = transactionType;
+async function searchForRecord(whereClause) {
 
     const record = await Record.findAll({
         attributes: {
@@ -111,6 +105,8 @@ async function searchForRecord(whereClause, transactionType) {
         where: whereClause,
         raw: true,
     });
+
+    return record;
 }
 
 export default { 
