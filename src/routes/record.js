@@ -1,8 +1,8 @@
 import express from "express";
-import {validateNewRec, validateRecordRange } from "../validators/record.js"
+import {validateNewRec, validateRecordRange, validateSearchQuery } from "../validators/record.js"
 import getValidationErr from "../middlewares/get_validation_error.js"
 import { requireAuth } from "../middlewares/auth_required.js"
-import { addRecord, getUserRecords } from "../controllers/record.js"
+import { addRecord, getUserRecords, search } from "../controllers/record.js"
 const router = express.Router();
 
 router.post(
@@ -19,6 +19,14 @@ router.get(
     validateRecordRange,
     getValidationErr,
     getUserRecords,
+)
+
+router.get(
+    "/search",
+    requireAuth,
+    validateSearchQuery,
+    getValidationErr,
+    search,
 )
 
 export default router;
