@@ -6,6 +6,8 @@ async function adminStats(req, res) {
     const { start, end } = req.query;
 
     let whereClause = {};
+    whereClause.transactionType = "lend";
+    whereClause.beenCleared = false;
 
     // checking for requested statistic range
     if (start && end) {
@@ -24,14 +26,14 @@ async function adminStats(req, res) {
     }
 
     try {
-        const statistics = await record.fetchAdminStatistics(whereClause, "lend");
+        const statistics = await record.fetchAdminStatistics(whereClause);
 
         return res.status(200).json({
             success: true,
             statistics: statistics,
         });
     } catch (error) {
-        return res.status(400).json({ success: false, error: error.message || "Registration Failed"});
+        return res.status(400).json({ success: false, error: error.message || "Failed to get statistics"});
     }
     
 }
