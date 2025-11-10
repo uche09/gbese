@@ -17,6 +17,7 @@ app.use(express.urlencoded({extended: true}));
 app.use("/api", routes.authRoutes);
 app.use("/api", routes.recordRouts);
 app.use("/api", routes.adminRoutes);
+app.use("/api", routes.userRoutes);
 
 // route defaults
 app.use(errorHandler);
