@@ -4,10 +4,15 @@ import sequelize, {connectDB} from "./config/db.js";
 import errorHandler from "./middlewares/app_error_handler.js";
 import routes from "./routes/index.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const app = express();
 
 // middlewares
+app.use(cors({
+  origin: (origin, callback) => callback(null, true),
+  credentials: true
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
