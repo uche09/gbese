@@ -82,7 +82,7 @@ export async function getUserRecords(req, res) {
 
         return res.status(200).json({
             success: true,
-            statistics: record,
+            record: record,
         });
     } catch (error) {
         return res.status(400).json({ success: false, error: error.message || "Failed to get Record"});
@@ -123,7 +123,7 @@ export async function search(req, res) {
 
         return res.status(200).json({
             success: true,
-            statistics: record,
+            record: record,
         });
     } catch (error) {
         return res.status(400).json({ success: false, error: error.message || "Search Failed"});

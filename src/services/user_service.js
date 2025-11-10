@@ -13,4 +13,20 @@ async function createUser(userData) {
     return newUser;
 }
 
-export { createUser };
+
+async function userDashboard(whereClause) {
+    const stats = await User.findOne({
+        attributes: [
+            ['creditsGiven', 'totalCreditGiven'],
+            ["outstanding_credits", "outstanding"],
+            ["debtorCount", "activeDebtors"],
+            ["creditPayments", "totalPayment"],
+        ],
+
+        where: whereClause,
+        raw: true
+    });
+
+    return stats;
+}
+export { createUser, userDashboard };
