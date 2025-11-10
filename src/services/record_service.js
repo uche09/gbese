@@ -25,12 +25,12 @@ async function createRecord(record) {
     switch (record.transactionType) {
         case "lend":
             if (record.payment === null || record.amount > record.payment) {
-                user.increment({
-                    debtorCount: 1,
-                    creditsGiven: record.amount,
-                    creditPayments: record.payment ?? 0
+                user.update({
+                    debtorCount: user.debtorCount + 1,
+                    creditsGiven: user.creditsGiven + record.amount,
+                    creditPayments: user.creditPayments + (record.payment ?? 0)
                 });
-
+                
                 await user.save();
             }
             break;
