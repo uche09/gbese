@@ -217,6 +217,15 @@ curl -X GET "https://gbese-6f0j.onrender.com/api/get-records?start=2025-11-08&en
 ```
 
 
+## ER Diagram
+
+The database Entity-Relationship (ER) diagram shows primary entities and relationships used by Gbese (users, records, tokens, etc).
+
+![ER Diagram](./img/ER_diagram.png)
+
+If the image does not render in your viewer, open /img/ER_diagram.png directly or view it in your IDE.
+
+
 ## Notes
 - Use the accessToken in Authorization header for protected endpoints.
 - Refresh token flows rely on an HttpOnly cookie; client should preserve cookies between requests.
